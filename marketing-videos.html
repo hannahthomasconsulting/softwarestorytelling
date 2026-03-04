@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hannah Thomas Consulting — LinkedIn Videos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --red: #E5342B;
+    --yellow: #F7D76E;
+    --dark: #111111;
+    --white: #ffffff;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #1c1c1c;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 40px 20px 80px;
+    font-family: 'Inter', sans-serif;
+    gap: 20px;
+  }
+
+  .page-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 900;
+    font-size: 18px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #fff;
+  }
+  .page-title span { color: var(--red); }
+
+  /* Nav */
+  .nav {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .nav-btn {
+    padding: 8px 18px;
+    border: 2px solid #3a3a3a;
+    background: transparent;
+    color: #777;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: all 0.2s;
+  }
+  .nav-btn:hover { border-color: #666; color: #ccc; }
+  .nav-btn.active { border-color: var(--red); background: var(--red); color: white; }
+
+  /* Wrapper */
+  .video-wrapper { display: none; flex-direction: column; align-items: center; gap: 14px; }
+  .video-wrapper.active { display: flex; }
+
+  /* Frame */
+  .video-frame {
+    width: 405px;
+    height: 720px;
+    position: relative;
+    overflow: hidden;
+    border-radius: 16px;
+    box-shadow: 0 28px 80px rgba(0,0,0,0.65);
+    display: flex;
+    flex-direction: column;
+  }
+
+  .controls { display: flex; gap: 10px; }
+
+  .replay-btn {
+    padding: 10px 22px;
+    background: var(--red);
+    color: white;
+    border: none;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: opacity 0.2s;
+  }
+  .replay-btn:hover { opacity: 0.85; }
+
+  .hint { color: #444; font-size: 12px; text-align: center; }
+
+  /* ==========================================
+     SHARED KEYFRAMES
+  ========================================== */
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(28px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+
+  @keyframes slideLeft {
+    from { opacity: 0; transform: translateX(-28px); }
+    to   { opacity: 1; transform: translateX(0); }
+  }
+
+  @keyframes expandRight {
+    from { width: 0; }
+    to   { width: 64px; }
+  }
+
+  @keyframes popIn {
+    from { opacity: 0; transform: scale(0.4); }
+    to   { opacity: 1; transform: scale(1); }
+  }
+
+  /* ==========================================
+     VIDEO 1 — BRAND INTRO
+     Style: Bold text animation, dark bg
+  ========================================== */
+
+  #v1 {
+    background: var(--dark);
+    padding: 64px 48px;
+    justify-content: center;
+  }
+
+  /* Default: all hidden */
+  #v1 .a { opacity: 0; }
+
+  #v1.playing .v1-dot    { animation: popIn    0.5s cubic-bezier(0.34,1.56,0.64,1) 0.2s  forwards; }
+  #v1.playing .v1-eye    { animation: fadeUp   0.5s ease                           0.8s  forwards; }
+  #v1.playing .v1-name   { animation: fadeUp   0.6s ease                           1.3s  forwards; }
+  #v1.playing .v1-div    { animation: expandRight 0.6s ease                        2.1s  forwards; }
+  #v1.playing .v1-w1     { animation: fadeUp   0.55s ease                          2.8s  forwards; }
+  #v1.playing .v1-w2     { animation: fadeUp   0.55s ease                          3.3s  forwards; }
+  #v1.playing .v1-w3     { animation: fadeUp   0.55s ease                          3.8s  forwards; }
+  #v1.playing .v1-w4     { animation: fadeUp   0.55s ease                          4.3s  forwards; }
+  #v1.playing .v1-tag    { animation: fadeUp   0.5s ease                           5.4s  forwards; }
+  #v1.playing .v1-url    { animation: fadeIn   0.5s ease                           6.5s  forwards; }
+
+  .v1-dot {
+    width: 14px; height: 14px;
+    background: var(--red);
+    border-radius: 50%;
+    margin-bottom: 36px;
+  }
+  .v1-eye {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700; font-size: 11px;
+    letter-spacing: 0.24em; text-transform: uppercase;
+    color: #555;
+    margin-bottom: 10px;
+  }
+  .v1-name {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 900; font-size: 52px;
+    line-height: 0.92; text-transform: uppercase;
+    color: var(--white);
+    margin-bottom: 36px;
+  }
+  .v1-div {
+    height: 3px; width: 0;
+    background: var(--red);
+    border-radius: 2px;
+    margin-bottom: 40px;
+  }
+  .v1-w1, .v1-w2, .v1-w3 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 900; font-size: 70px;
+    line-height: 0.87; text-transform: uppercase;
+    color: var(--white);
+  }
+  .v1-w1 { color: var(--yellow); }
+  .v1-w4 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 900; font-size: 70px;
+    line-height: 0.87; text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 48px;
+  }
+  .v1-tag {
+    font-family: 'Inter', sans-serif;
+    font-size: 13px; color: #666;
+    line-height: 1.6;
+    max-width: 270px;
+    margin-bottom: 28px;
+  }
+  .v1-url {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700; font-size: 12px;
+    letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--red);
+  }
+
+  /* ==========================================
+     VIDEO 2 — THE PROBLEM
+     Style: Yellow top / dark bottom, checklist
+  ========================================== */
+
+  #v2 {
+    background: var(--yellow);
+    flex-direction: column;
+    padding: 0;
+  }
+
+  #v2 .a { opacity: 0; }
+
+  #v2.playing .v2-tag      { animation: fadeUp   0.5s ease  0.3s forwards; }
+  #v2.playing .v2-hed      { animation: fadeUp   0.6s ease  0.8s forwards; }
+  #v2.playing .v2-i1       { animation: slideLeft 0.5s ease 1.9s forwards; }
+  #v2.playing .v2-i2       { animation: slideLeft 0.5s ease 2.8s forwards; }
+  #v2.playing .v2-i3       { animation: slideLeft 0.5s ease 3.7s forwards; }
+  #v2.playing .v2-i4       { animation: slideLeft 0.5s ease 4.6s forwards; }
+  #v2.playing .v2-i5       { animation: slideLeft 0.5s ease 5.5s forwards; }
+  #v2.playing .v2-callout  { animation: fadeUp   0.6s ease  7.0s forwards; }
+  #v2.playing .v2-brand    { animation: fadeIn   0.5s ease  7.9s forwards; }
+
+  .v2-top {
+    padding: 52px 44px 28px;
+    flex: 1;
+  }
+  .v2-tag {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700; font-size: 11px;
+    letter-spacing: 0.22em; text-transform: uppercase;
+    color: #888; margin-bottom: 10px;
+  }
+  .v2-hed {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 900; font-size: 40px;
+    line-height: 0.95; text-transform: uppercase;
+    color: var(--dark); margin-bottom: 26px;
+  }
+  .v2-list {
+    list-style: none;
+    border: 2px solid rgba(0,0,0,0.1);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .v2-item {
+    display: flex; align-items: flex-start; gap: 13px;
+    padding: 13px 15px;
+    border-bottom: 1px solid rgba(0,0,0,0.08);
+    background: white;
+  }
+  .v2-item:last-child { border-bottom: none; }
+  .v2-check {
+    width: 18px; height: 18px; flex-shrink: 0;
+    border: 2px solid var(--red);
+    border-radius: 3px;
+    background: rgba(229,52,43,0.07);
+    margin-top: 2px;
+  }
+  .v2-text {
+    font-family: 'Inter', sans-serif;
+    font-size: 13px; font-weight: 500;
+    color: var(--dark); line-height: 1.4;
+  }
+  .v2-bottom {
+    background: var(--dark);
+    padding: 34px 44px 52px;
+  }
+  .v2-callout {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 900; font-size: 32px;
+    line-height: 1.05; text-transform: uppercase;
+    color: var(--white); margin-bottom: 10px;
+  }
+  .v2-callout em { color: var(--red); font-style: normal; }
+  .v2-brand {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700; font-size: 11px;
+    letter-spacing: 0.18em; text-transform: uppercase;
+    color: #444;
+  }
+
+  /* ==========================================
+     VIDEO 3 — STATS
+     Style: Dark bg, numbers count up one by one
+  ========================================== */
+
+  #v3 {
+    background: var(--dark);
+    justify-content: space-between;
+    padding: 64px 48px 56px;
+  }
+
+  #v3 .a { opacity: 0; }
+
+  #v3.playing .v3-head  { animation: fadeUp 0.6s ease 0.3s  forwards; }
+  #v3.playing .v3-s1    { animation: fadeUp 0.5s ease 1.2s  forwards; }
+  #v3.playing .v3-s2    { animation: fadeUp 0.5s ease 2.4s  forwards; }
+  #v3.playing .v3-s3    { animation: fadeUp 0.5s ease 3.6s  forwards; }
+  #v3.playing .v3-s4    { animation: fadeUp 0.5s ease 4.8s  forwards; }
+  #v3.playing .v3-s5    { animation: fadeUp 0.5s ease 6.0s  forwards; }
+  #v3.playing .v3-foot  { animation: fadeIn 0.5s ease 7.5s  forwards; }
+
+  .v3-tag {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700; font-size: 11px;
+    letter-spacing: 0.22em; text-transform: uppercase;
+    color: var(--red); margin-bottom: 8px;
+  }
+  .v3-hed {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 900; font-size: 42px;
+    line-height: 0.92; text-transform: uppercase;
+    color: var(--white);
+  }
+  .v3-hed span { color: var(--yellow); }
+  .v3-rows { display: flex; flex-direction: column; }
+  .v3-row {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 17px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+  }
+  .v3-row:last-child { border-bottom: none; }
+  .v3-num {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 900; font-size: 54px;
+    line-height: 1; color: var(--yellow);
+  }
+  .v3-desc {
+    font-family: 'Inter', sans-serif;
+    font-size: 11px; font-weight: 600;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    color: #555; text-align: right;
+    max-width: 140px; line-height: 1.4;
+  }
+  .v3-url {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700; font-size: 12px;
+    letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--red);
+  }
+
+  /* ==========================================
+     VIDEO 4 — SERVICES
+     Style: Sliding colour panels
+  ========================================== */
+
+  #v4 {
+    background: var(--dark);
+    padding: 0;
+    overflow: hidden;
+  }
+
+  .v4-track {
+    display: flex;
+    width: 1620px; /* 405 × 4 */
+    height: 720px;
+    will-change: transform;
+  }
+
+  #v4.playing .v4-track {
+    animation: v4Pan 22s cubic-bezier(0.77,0,0.175,1) forwards;
+  }
+
+  @keyframes v4Pan {
+    0%   { transform: translateX(0); }
+    20%  { transform: translateX(0); }
+    25%  { transform: translateX(-405px); }
+    45%  { transform: translateX(-405px); }
+    50%  { transform: translateX(-810px); }
+    70%  { transform: translateX(-810px); }
+    75%  { transform: translateX(-1215px); }
+    100% { transform: translateX(-1215px); }
+  }
+
+  .v4-slide {
+    width: 405px; height: 720px;
+    flex-shrink: 0;
+    display: flex; flex-direction: column;
+    position: relative;
+  }
+
+  /* Slide 1: intro, dark */
+  .v4-s1 {
+    background: var(--dark);
+    justify-content: center;
+    padding: 72px 48px;
+  }
+  .v4-s1-eye {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700; font-size: 11px;
+    letter-spacing: 0.22em; text-transform: uppercase;
+    color: var(--red); margin-bottom: 16px;
+  }
+  .v4-s1-h {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 900; font-size: 62px;
+    line-height: 0.9; text-transform: uppercase;
+    color: var(--white); margin-bottom: 28px;
+  }
+  .v4-s1-h span { color: var(--yellow); }
+  .v4-s1-body {
+    font-family: 'Inter', sans-serif;
+    font-size: 14px; color: #666; line-height: 1.6;
+  }
+  .v4-counter {
+    position: absolute; bottom: 32px; left: 48px;
+    display: flex; gap: 8px;
+  }
+  .v4-dot {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: #333;
+    transition: background 0.4s;
+  }
+  .v4-dot.on { background: var(--red); }
+
+  /* Slide 2: yellow */
+  .v4-s2 { background: var(--yellow); justify-content: flex-end; }
+  .v4-snum {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 900; font-size: 130px;
+    line-height: 0.85; padding: 32px 48px 0;
+    color: rgba(0,0,0,0.07);
+  }
+  .v4-snum-w { color: rgba(255,255,255,0.1); }
+  .v4-scontent { padding: 0 48px 60px; }
+  .v4-stitle {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 900; font-size: 32px;
+    line-height: 0.95; text-transform: uppercase;
+    color: var(--dark); margin-bottom: 12px;
+  }
+  .v4-stitle-w { color: white; }
+  .v4-sdesc {
+    font-family: 'Inter', sans-serif;
+    font-size: 13px; color: #555; line-height: 1.6;
+    margin-bottom: 20px;
+  }
+  .v4-sdesc-w { color: rgba(255,255,255,0.7); }
+  .v4-pills { display: flex; flex-wrap: wrap; gap: 6px; }
+  .pill {
+    padding: 5px 12px; border-radius: 100px;
+    font-family: 'Inter', sans-serif;
+    font-size: 11px; font-weight: 600;
+    background: rgba(0,0,0,0.1); color: #333;
+  }
+  .pill-w {
+    padding: 5px 12px; border-radius: 100px;
+    font-family: 'Inter', sans-serif;
+    font-size: 11px; font-weight: 600;
+    background: rgba(255,255,255,0.15); color: white;
+  }
+
+  /* Slide 3: red */
+  .v4-s3 { background: var(--red); justify-content: flex-end; }
+
+  /* Slide 4: CTA, dark */
+  .v4-s4 {
+    background: var(--dark);
+    justify-content: center; align-items: center;
+    text-align: center; padding: 72px 48px;
+  }
+  .v4-logo {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 900; font-size: 13px;
+    letter-spacing: 0.14em; text-transform: uppercase;
+    color: #555; margin-bottom: 56px;
+  }
+  .v4-logo em { color: var(--red); font-style: normal; }
+  .v4-cta-h {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 900; font-size: 56px;
+    line-height: 0.9; text-transform: uppercase;
+    color: var(--white); margin-bottom: 36px;
+  }
+  .v4-cta-h span { color: var(--yellow); }
+  .v4-btn {
+    display: inline-block;
+    padding: 16px 32px;
+    background: var(--red);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700; font-size: 15px;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    color: white; border-radius: 4px;
+  }
+
+  /* Progress bar */
+  .v4-bar {
+    position: absolute; bottom: 0; left: 0;
+    height: 3px; background: var(--red); width: 0;
+  }
+  #v4.playing .v4-bar {
+    animation: v4Bar 22s linear forwards;
+  }
+  @keyframes v4Bar { from { width: 0; } to { width: 100%; } }
+</style>
+</head>
+<body>
+
+<div class="page-title"><span>●</span> LinkedIn Videos — Hannah Thomas Consulting</div>
+
+<div class="nav">
+  <button class="nav-btn active" onclick="show(1,this)">1 — Brand Intro</button>
+  <button class="nav-btn" onclick="show(2,this)">2 — The Problem</button>
+  <button class="nav-btn" onclick="show(3,this)">3 — Stats</button>
+  <button class="nav-btn" onclick="show(4,this)">4 — Services</button>
+</div>
+
+<!-- ======================== VIDEO 1: BRAND INTRO ======================== -->
+<div class="video-wrapper active" id="w1">
+  <div class="video-frame" id="v1">
+    <div class="a v1-dot"></div>
+    <div class="a v1-eye">Hannah Thomas Consulting</div>
+    <div class="a v1-name">Hannah<br>Thomas</div>
+    <div class="a v1-div"></div>
+    <div class="a v1-w1">BEHAVIORAL</div>
+    <div class="a v1-w2">SCIENCE FOR</div>
+    <div class="a v1-w3">PRESALES</div>
+    <div class="a v1-w4">TO SCALE</div>
+    <div class="a v1-tag">Turn your sales engineers into revenue-driving storytellers using science-backed demo systems built for how humans actually decide.</div>
+    <div class="a v1-url">hannahthomasconsulting.org</div>
+  </div>
+  <div class="controls">
+    <button class="replay-btn" onclick="replay('v1')">↺ Replay</button>
+  </div>
+  <p class="hint">Screen-record at 405×720 · 9:16 ratio · ideal for LinkedIn vertical</p>
+</div>
+
+<!-- ======================== VIDEO 2: THE PROBLEM ======================== -->
+<div class="video-wrapper" id="w2">
+  <div class="video-frame" id="v2">
+    <div class="v2-top">
+      <div class="a v2-tag">The Real Problem</div>
+      <div class="a v2-hed">Does this sound<br>like your team?</div>
+      <ul class="v2-list">
+        <li class="v2-item a v2-i1"><div class="v2-check"></div><span class="v2-text">Over-explaining features instead of outcomes</span></li>
+        <li class="v2-item a v2-i2"><div class="v2-check"></div><span class="v2-text">Losing buyer attention halfway through the demo</span></li>
+        <li class="v2-item a v2-i3"><div class="v2-check"></div><span class="v2-text">Depending on individual charisma to close</span></li>
+        <li class="v2-item a v2-i4"><div class="v2-check"></div><span class="v2-text">Stalling late in the sales cycle</span></li>
+        <li class="v2-item a v2-i5"><div class="v2-check"></div><span class="v2-text">Hearing "Let me think about it" too often</span></li>
+      </ul>
+    </div>
+    <div class="v2-bottom">
+      <div class="a v2-callout">The issue isn't talent.<br><em>It's human behavior.</em></div>
+      <div class="a v2-brand">Hannah Thomas Consulting</div>
+    </div>
+  </div>
+  <div class="controls">
+    <button class="replay-btn" onclick="replay('v2')">↺ Replay</button>
+  </div>
+  <p class="hint">Screen-record at 405×720 · 9:16 ratio · ideal for LinkedIn vertical</p>
+</div>
+
+<!-- ======================== VIDEO 3: STATS ======================== -->
+<div class="video-wrapper" id="w3">
+  <div class="video-frame" id="v3">
+    <div class="a v3-head">
+      <div class="v3-tag">By the Numbers</div>
+      <div class="v3-hed">REAL<br><span>RESULTS.</span></div>
+    </div>
+    <div class="v3-rows">
+      <div class="v3-row a v3-s1">
+        <div class="v3-num" id="c1" data-end="40" data-pre="$" data-suf="M">$0M</div>
+        <div class="v3-desc">Influenced<br>Revenue</div>
+      </div>
+      <div class="v3-row a v3-s2">
+        <div class="v3-num" id="c2" data-end="900" data-pre="" data-suf="+">0+</div>
+        <div class="v3-desc">Demos<br>Delivered</div>
+      </div>
+      <div class="v3-row a v3-s3">
+        <div class="v3-num" id="c3" data-end="96" data-pre="" data-suf="%">0%</div>
+        <div class="v3-desc">Win<br>Rate</div>
+      </div>
+      <div class="v3-row a v3-s4">
+        <div class="v3-num" id="c4" data-end="175" data-pre="" data-suf="+">0+</div>
+        <div class="v3-desc">Strategic<br>Demo Assets</div>
+      </div>
+      <div class="v3-row a v3-s5">
+        <div class="v3-num" id="c5" data-end="300" data-pre="" data-suf="%">0%</div>
+        <div class="v3-desc">Team<br>Scale</div>
+      </div>
+    </div>
+    <div class="a v3-foot">
+      <div class="v3-url">hannahthomasconsulting.org</div>
+    </div>
+  </div>
+  <div class="controls">
+    <button class="replay-btn" onclick="replay('v3')">↺ Replay</button>
+  </div>
+  <p class="hint">Screen-record at 405×720 · 9:16 ratio · ideal for LinkedIn vertical</p>
+</div>
+
+<!-- ======================== VIDEO 4: SERVICES ======================== -->
+<div class="video-wrapper" id="w4">
+  <div class="video-frame" id="v4">
+    <div class="v4-track">
+
+      <!-- Slide 1: What I Do intro -->
+      <div class="v4-slide v4-s1">
+        <div class="v4-s1-eye">What I Do</div>
+        <div class="v4-s1-h">PRESALES<br><span>PERFORMANCE</span><br>SERVICES</div>
+        <div class="v4-s1-body">I help SaaS companies scale high-performing presales organizations — without hiring more individual contributors.</div>
+        <div class="v4-counter">
+          <div class="v4-dot on"></div>
+          <div class="v4-dot"></div>
+          <div class="v4-dot"></div>
+          <div class="v4-dot"></div>
+        </div>
+      </div>
+
+      <!-- Slide 2: Service 01, yellow -->
+      <div class="v4-slide v4-s2">
+        <div class="v4-snum">01</div>
+        <div class="v4-scontent">
+          <div class="v4-stitle">Presales Storytelling<br>Training</div>
+          <div class="v4-sdesc">Live, science-backed workshops for SEs and SAs. Alignment, consistency, and behavioral engagement built to scale.</div>
+          <div class="v4-pills">
+            <span class="pill">Discovery Techniques</span>
+            <span class="pill">Demo Narratives</span>
+            <span class="pill">Executive Value</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 3: Service 02, red -->
+      <div class="v4-slide v4-s3">
+        <div class="v4-snum v4-snum-w">02</div>
+        <div class="v4-scontent">
+          <div class="v4-stitle v4-stitle-w">Demo Strategy &amp;<br>Clickpath Architecture</div>
+          <div class="v4-sdesc v4-sdesc-w">Redesign your demo experience to align with buyer psychology. Transform individual talent into repeatable performance.</div>
+          <div class="v4-pills">
+            <span class="pill-w">Buyer Psychology</span>
+            <span class="pill-w">Repeatable Systems</span>
+            <span class="pill-w">Decision Architecture</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 4: CTA, dark -->
+      <div class="v4-slide v4-s4">
+        <div class="v4-logo"><em>●</em> Hannah Thomas Consulting</div>
+        <div class="v4-cta-h">READY<br>TO<br><span>SCALE?</span></div>
+        <div class="v4-btn">Book a Strategy Call</div>
+      </div>
+
+    </div>
+    <div class="v4-bar"></div>
+  </div>
+  <div class="controls">
+    <button class="replay-btn" onclick="replay('v4')">↺ Replay</button>
+  </div>
+  <p class="hint">Screen-record at 405×720 · 9:16 ratio · 22s slides through 4 panels</p>
+</div>
+
+<script>
+  // Counter timers store
+  let cTimers = [];
+
+  // Counter animation
+  function countUp(id, delay) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const end  = parseInt(el.dataset.end);
+    const pre  = el.dataset.pre;
+    const suf  = el.dataset.suf;
+    const t = setTimeout(() => {
+      const dur = 900;
+      const t0 = performance.now();
+      function frame(now) {
+        const p = Math.min((now - t0) / dur, 1);
+        const ease = 1 - Math.pow(1 - p, 3);
+        el.textContent = pre + Math.round(end * ease) + suf;
+        if (p < 1) requestAnimationFrame(frame);
+      }
+      requestAnimationFrame(frame);
+    }, delay);
+    cTimers.push(t);
+  }
+
+  function startCounters() {
+    cTimers.forEach(clearTimeout);
+    cTimers = [];
+    // Reset display
+    ['c1','c2','c3','c4','c5'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.textContent = el.dataset.pre + '0' + el.dataset.suf;
+    });
+    countUp('c1', 1200);
+    countUp('c2', 2400);
+    countUp('c3', 3600);
+    countUp('c4', 4800);
+    countUp('c5', 6000);
+  }
+
+  // Replay a video by ID
+  function replay(id) {
+    const el = document.getElementById(id);
+    el.classList.remove('playing');
+    void el.offsetHeight; // force reflow to restart animations
+    el.classList.add('playing');
+    if (id === 'v3') startCounters();
+  }
+
+  // Switch between videos
+  function show(n, btn) {
+    document.querySelectorAll('.video-wrapper').forEach(w => w.classList.remove('active'));
+    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('w' + n).classList.add('active');
+    btn.classList.add('active');
+    // Auto-play after a short delay
+    setTimeout(() => replay('v' + n), 120);
+  }
+
+  // Auto-start video 1 on load
+  window.addEventListener('load', () => {
+    requestAnimationFrame(() => replay('v1'));
+  });
+</script>
+
+</body>
+</html>
